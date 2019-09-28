@@ -1,0 +1,22 @@
+language: english
+sudo: required
+services:
+    - docker
+    
+before_install:
+    - docker build -t alexandersubota/fibsq -f ./client/Dockerfile.dev ./client
+    
+script:
+    - docker run -e CI=true alexandersubota/fibsq npm test
+    
+after_success:
+    - docker build -t alexandersubota/multi-client ./client 
+    - docker build -t alexandersubota/multi-nginx ./nginx
+    - docker build -t alexandersubota/multi-server ./server
+    - docker build -t alexandersubota/multi-worker ./worker
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    - docker push alexandersubota/multi-client
+    - docker push alexandersubota/multi-nginx
+    - docker push alexandersubota/multi-server
+    - docker push alexandersubota/multi-worker
+    
