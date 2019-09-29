@@ -19,4 +19,18 @@ after_success:
     - docker push alexandersubota/multi-nginx
     - docker push alexandersubota/multi-server
     - docker push alexandersubota/multi-worker
-    
+
+deploy:
+    provider: elasticbeanstalk
+    region: us-east-1
+    app: multi-docker
+    env: Multi-container
+    bucket_name: elasticbeanstalk-us-east-1-602281756836
+    bycket_path: docker-multi
+    on:
+        branch: master
+    access_key_id: 
+        secure: $AWS_ACCESS_KEY
+    secret_access_key:
+        seure: $AWS_SECRET_KEY
+        
